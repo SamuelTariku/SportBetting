@@ -26,7 +26,7 @@ def get_all_bets():
         out.append(bet_data)
     print(out)
 
-    return jsonify({'bets': out})
+    return jsonify(out)
 
 
 @bets.route('/bets/<bet_id>', methods=['GET'])
@@ -87,14 +87,16 @@ def create_bet():
     return jsonify({'message': 'new bet created'})
 
 
-@bets.route('/bets/<bets_id>', methods=['PUT'])
+@bets.route('/bets/<bet_id>', methods=['PUT'])
 def update_bet(bet_id):
     data = request.get_json()
 
-    bet = Bet.query.filter_by(id=bet_id)
+    bet = Bet.query.filter_by(id=bet_id).first()
 
     if not bet:
         return jsonify({'message': 'no bet found'})
+    print()
+    print(data['amount'], data['outcome'])
 
     bet.amount = data['amount']
     bet.outcome = data['outcome']
@@ -104,15 +106,15 @@ def update_bet(bet_id):
     return jsonify({'message': 'bet has been updated'})
 
 
-@bets.route('/bets/<bets_id>', methods=['DELETE'])
+@bets.route('/bets/<bet_id>', methods=['DELETE'])
 def delete_bet(bet_id):
     bet = Bet.query.filter_by(id=bet_id).first()
 
     if not bet:
         return jsonify({'message': 'no bet found'})
 
-    if bet.datetime > datetime.now():
-        return jsonify({'message': 'time has passed'})
+    # if bet.datetime > datetime.now():
+    #     return jsonify({'message': 'time has passed'})
 
     db.session.delete(bet)
     db.session.commit()

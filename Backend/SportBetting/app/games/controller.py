@@ -18,12 +18,12 @@ def get_all_games():
         game_data['id'] = game.id
         game_data['team_one'] = game.teamOneName
         game_data['team_two'] = game.teamTwoName
-        game_data['datatime'] = game.datetime
+        game_data['datetime'] = game.datetime
         game_data['sport'] = game.sport
 
         out.append(game_data)
 
-    return jsonify({'games': out})
+    return jsonify(out)
 
 # Returns JSON to user
 
