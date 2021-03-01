@@ -8,7 +8,7 @@ import 'package:flutter_network/bet/bet.dart';
 // import 'package:jwt_decode/jwt_decode.dart';
 
 class AuthenticationDataProvider {
-  final _baseUrl = 'http://10.0.2.2:5000';
+  final _baseUrl = 'http://192.168.1.9:5000';
   final http.Client httpClient;
   AuthenticationDataProvider({@required this.httpClient})
       : assert(httpClient != null);
