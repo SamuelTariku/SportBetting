@@ -5,3 +5,6 @@ export './bet_route.dart';
 export './games.dart';
 export './game_bets.dart';
 export './account.dart';
+export './sign_in_screen.dart';
+export './sign_up_screen.dart';
+export './user_profile_screen.dart';

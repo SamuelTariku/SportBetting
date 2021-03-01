@@ -65,7 +65,7 @@ def get_by_user(user_id):
 
         out.append(bet_data)
 
-    return jsonify({'bets': out})
+    return jsonify(out)
 
 
 @bets.route('/bets', methods=['POST'])

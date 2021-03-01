@@ -5,23 +5,24 @@ import '../../models/user.dart';
 import 'user_event.dart';
 import 'user_state.dart';
 
-class UserBloc extends Bloc<UserEvent,UserState>{
+class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository userRepository;
-  UserBloc({@required this.userRepository}):assert(userRepository!=null), super(UserInProgress());
+  UserBloc({@required this.userRepository})
+      : assert(userRepository != null),
+        super(UserInProgress());
   @override
-  Stream<UserState> mapEventToState(UserEvent event) async*{
-
-    if(event is UserCreate){
+  Stream<UserState> mapEventToState(UserEvent event) async* {
+    if (event is UserCreate) {
       print('fired user create');
 
       try {
         await userRepository.createUser(event.user);
         //final comments = await commentRepository.getComments(event.comment.recipeid);
         yield UserSuccessfull();
-      } catch (_) {
+      } catch (e) {
+        print("Exception: $e");
         yield UserFailure();
       }
-
     }
 
     if (event is UserDelete) {
@@ -34,21 +35,14 @@ class UserBloc extends Bloc<UserEvent,UserState>{
       //   yield CommentFailure();
       // }
     }
-    if(event is UserUpdate){
-      //  int rid = event.comment.recipeid;
-      //   print(rid);
-      //   try {
-      //   await commentRepository.updateComment(event.comment);
-      //  final comments = await commentRepository.getComments(rid);
-      //  print('fefefefefefefefefefeefe');
-      //   yield CommentSuccessfull(comments);
-      //   print('commne sucesssssss');
-      // } catch (_) {
-      //   yield CommentFailure();
-      // }
+    if (event is UserUpdate) {
+      try {
+        await userRepository.updateUser(event.user);
+        yield UserSuccessfull();
+      } catch (e) {
+        print("Exception: $e");
+        yield UserFailure();
+      }
     }
-
-
   }
-
-} 
+}

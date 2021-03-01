@@ -20,6 +20,7 @@ class _AddUpdateBetState extends State<AddUpdateBet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green,
         title: Text('${widget.args.edit ? "Edit Bet" : "Add New Bet"}'),
       ),
       body: Padding(
@@ -112,8 +113,8 @@ class _AddUpdateBetState extends State<AddUpdateBet> {
                               ),
                             );
                       BlocProvider.of<BetBloc>(context).add(event);
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          BetsList.routeName, (route) => false);
+                      Navigator.of(context)
+                          .pushReplacementNamed(BetsList.routeName);
                     }
                   },
                   label: Text('ADD'),

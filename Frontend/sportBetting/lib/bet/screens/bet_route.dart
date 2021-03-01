@@ -2,10 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_network/bet/bet.dart';
 import 'package:flutter_network/bet/screens/account.dart';
 import 'package:flutter_network/bet/screens/game_bets.dart';
+import 'package:flutter_network/bet/screens/login_attempt.dart';
 
 class BetAppRoute {
   static Route generateRoute(RouteSettings settings) {
     if (settings.name == '/') {
+      return MaterialPageRoute(builder: (context) => SignInScreen());
+    }
+
+    if (settings.name == SignUpScreen.routeName) {
+      return MaterialPageRoute(builder: (context) => SignUpScreen());
+    }
+
+    if (settings.name == LoginAttempt.routeName) {
+      return MaterialPageRoute(builder: (context) => LoginAttempt());
+    }
+
+    if (settings.name == GamesList.routeName) {
       return MaterialPageRoute(builder: (context) => GamesList());
     }
 
@@ -39,6 +52,10 @@ class BetAppRoute {
           builder: (context) => BetDetail(
                 bet: bet,
               ));
+    }
+
+    if (settings.name == UserProfileScreen.routeName) {
+      return MaterialPageRoute(builder: (context) => UserProfileScreen());
     }
 
     return MaterialPageRoute(builder: (context) => BetsList());

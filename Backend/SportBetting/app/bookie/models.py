@@ -7,7 +7,7 @@ class Bookie (db.Model):
     gameID = db.Column(db.String(32))
     btid = db.Column(db.String(32))
     active = db.Column(db.Boolean)
-    datetime = db.Column(db.DateTime)
+    datetime = db.Column(db.String)
     outcome = db.Column(db.Integer)
 
 

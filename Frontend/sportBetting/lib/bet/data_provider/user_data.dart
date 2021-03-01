@@ -4,21 +4,20 @@ import 'package:flutter/material.dart';
 import '../models/user.dart';
 import 'package:http/http.dart' as http;
 
-class UserDataProvider{
-  final _baseUrl = 'http://192.168.1.9:5000';
+class UserDataProvider {
+  final _baseUrl = '192.168.1.9:5000';
   final http.Client httpClient;
   UserDataProvider({@required this.httpClient}) : assert(httpClient != null);
 
   Future<User> createUser(User user) async {
     final response = await httpClient.post(
-      Uri.http(_baseUrl, '/signup'),
+      Uri.http(_baseUrl, '/user'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
         'password': user.password,
-        'email': user.email,
-
+        'username': user.username,
       }),
     );
     print("ppppppppppppppppppppppppppppppppppppppppppppppp");
@@ -31,7 +30,6 @@ class UserDataProvider{
       throw Exception('Failed to create comment.');
     }
   }
-
 
   Future<void> deleteUser(int id) async {
     final response = await httpClient.delete(
@@ -46,19 +44,16 @@ class UserDataProvider{
     }
   }
 
-
-
-
   Future<void> updateUser(User user) async {
     final response = await httpClient.put(
-      '$_baseUrl/comments/update/${user.id}',
+      'http://192.168.1.9:5000/user/${user.id}',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
         'id': user.id,
         'password': user.password,
-        'email': user.email,
+        'username': user.username,
       }),
     );
     print('status code.${response.statusCode}');
@@ -66,7 +61,4 @@ class UserDataProvider{
       throw Exception('Failed to update comment.');
     }
   }
-
-
 }
-

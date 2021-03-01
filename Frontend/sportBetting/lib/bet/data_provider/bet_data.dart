@@ -30,16 +30,19 @@ class BetDataProvider {
     }
   }
 
-  Future<List<Bet>> getBets() async {
+  Future<List<Bet>> getBets(String userID) async {
     // try {
-    final response = await httpClient.get('$_baseUrl/bets');
+    final response = await httpClient.get('$_baseUrl/bets/user/$userID');
     // }
     // catch(e) {
     //   print(e);
     // }
 
     if (response.statusCode == 200) {
+      print("-----------RESPONSE from $userID --------");
+      print(response.body);
       final bet = jsonDecode(response.body) as List;
+
       return bet.map((bet) => Bet.fromJson(bet)).toList();
       // var betting = new List(bet.length);
       // for (var value in bet) {

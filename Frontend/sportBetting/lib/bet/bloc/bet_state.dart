@@ -8,6 +8,8 @@ class BetState extends Equatable {
   List<Object> get props => [];
 }
 
+class BetInit extends BetState {}
+
 class BetLoading extends BetState {}
 
 class BetsLoadSuccess extends BetState {

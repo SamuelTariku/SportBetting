@@ -10,7 +10,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthenticationBloc _authenticationBloc;
   final AuthenticationRepository _authenticationRepository;
 
-  LoginBloc(AuthenticationBloc authenticationBloc, AuthenticationRepository authentication_authenticationRepository)
+  LoginBloc(AuthenticationBloc authenticationBloc,
+      AuthenticationRepository authentication_authenticationRepository)
       : assert(authenticationBloc != null),
         assert(authentication_authenticationRepository != null),
         _authenticationBloc = authenticationBloc,
@@ -24,25 +25,29 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Stream<LoginState> _mapLoginWithEmailToState(LoginInWithEmailButtonPressed event) async* {
+  Stream<LoginState> _mapLoginWithEmailToState(
+      LoginInWithEmailButtonPressed event) async* {
     yield LoginLoading();
-    print('Nth very weird just happened');
     try {
-      final token = await _authenticationRepository.signInWithEmailAndPassword(event.user);
-      print(token);
-      final user = await _authenticationRepository.getUser(int.parse(token));
+      final payload = await _authenticationRepository
+          .signInWithEmailAndPassword(event.user);
+      print(payload);
+      final user = await _authenticationRepository.getUser(
+          payload['public_id'], payload['token']);
+      print(user);
       if (user != null) {
-        print('userEmail');
-        print(user.email);
+        print('user');
+        print(user.username);
         _authenticationBloc.add(UserLoggedIn(user: user));
-        yield LoginSuccess();
-        yield LoginInitial();
+        yield LoginSuccess(user: user);
       } else {
-        yield LoginFailure(error: 'Something very weird just happened');
+        yield LoginFailure(error: 'Unknown user');
       }
     } on Exception catch (e) {
+      print("Exception: $e");
       yield LoginFailure(error: "");
     } catch (err) {
+      print("Exception: $err");
       yield LoginFailure(error: err.message ?? 'An unknown error occured');
     }
   }

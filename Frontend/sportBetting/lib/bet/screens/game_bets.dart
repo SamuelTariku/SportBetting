@@ -18,6 +18,7 @@ class GameBetsList extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green,
         title: Text('Bets for game'),
       ),
       body: BlocBuilder<BookieBloc, BookieState>(

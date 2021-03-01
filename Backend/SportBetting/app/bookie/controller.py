@@ -1,9 +1,12 @@
 
 
-from flask import Flask, Blueprint, jsonify
+from flask import Flask, Blueprint, jsonify, request
 
 from .models import *
+from app.bets.models import *
+from app.users.models import *
 
+import uuid
 bookie = Blueprint('bookie_control', __name__)
 
 
@@ -73,6 +76,16 @@ def get_bookie(bookie_id):
     return jsonify(bookie_data)
 
 
+@bookie.route('/bookie/games/<game_id>', methods=['PUT'])
+def update_bookie_game(game_id):
+
+    data = request.get_json()
+
+    bookieBet = Bookie.query.filter_by(gameID=game_id)
+    if not bookieBet:
+        return jsonify({'message': 'no game found'})
+
+
 @bookie.route('/bookie/game/<game_id>', methods=['GET'])
 def get_bookie_game(game_id):
     bookieBet = Bookie.query.filter_by(gameID=game_id).first()
@@ -111,19 +124,84 @@ def get_bookie_game(game_id):
     return jsonify(bookie_data)
 
 
+# @bookie.route('/bookie/game/<game_id>', methods=['POST'])
+# def bookie_bet_win(game_id):
+#     bookieBet = Bookie.query.filter_by(gameID=game_id).first()
+#     if not bookieBet:
+#         return jsonify({'message': 'no game found'})
+
+#     new_bookie_bet = Bookie(
+#         id=uuid.uuid4(),
+#         btid=1,
+#         GameID=game_id,
+#         active=True,
+
+
+#     )
+
+@bookie.route('/bookie/game/<game_id>', methods=['PUT'])
+def update_wins(game_id):
+    data = request.get_json()
+
+    bookieBet = Bookie.query.filter_by(gameID=game_id, btid=1).first()
+    if not bookieBet:
+        return jsonify({'message': 'no game found'})
+
+    bookieBet.outcome = data['outcome']
+
+    userBets = Bet.query.filter_by(bookieID=bookieBet.id)
+    userOdd = Outcome.query.filter_by(bookieID=bookieBet.id)
+
+    for userBet in userBets:
+        if(userBet.outcome == data['outcome']):
+            user = User.query.filter_by(id=userBet.userID).first()
+            user.balance = user.balance * (1 / userOdd.odd)
+
+    db.session.commit()
+
+    return jsonify({'message': 'bookie has been updated'})
+
 # Admin controls form request
+
+
 @bookie.route('/bookie', methods=['POST'])
 def create_bookie_bet():
-
+    data = request.get_json()
     return ''
 
 
-# Admin side
 @bookie.route('/bookie/<bookieID>', methods=['PUT'])
 def update_bookie_bet(bookieID):
-    return ''
+    data = request.get_json()
+
+    bookieBet = Bookie.query.filter_by(id=bookieID).first()
+    if not bookieBet:
+        return jsonify({'message': 'no game found'})
+
+    bookieBet.outcome = data['outcome']
+
+    userBets = Bet.query.filter_by(bookieID=bookieBet.id)
+    userOdd = Outcome.query.filter_by(
+        bookieID=bookieBet.id, outcomeIndex=int(data['outcome'])).first()
+
+    for userBet in userBets:
+        if(userBet.outcome == data['outcome']):
+            user = User.query.filter_by(public_id=userBet.userID).first()
+            user.balance = user.balance * (1 / userOdd.odd)
+
+    db.session.commit()
+
+    return jsonify({'message': 'bookie has been updated'})
 
 
 @bookie.route('/bookie/<bookieID>', methods=['DELETE'])
 def delete_bookie_bet(bookieID):
-    return ''
+    bookie = Bookie.query.filter_by(id=bookieID).first()
+
+    if not bookie:
+        return jsonify({'message': 'no bookie bet found'})
+
+    db.session.delete(bookie)
+    db.session.commit()
+
+    return jsonify({'message': 'bookie bet has been deleted'})

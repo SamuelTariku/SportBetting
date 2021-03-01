@@ -4,16 +4,17 @@ import '../../repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc
+    extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthenticationRepository authenticationRepository;
 
   AuthenticationBloc({@required this.authenticationRepository})
       : assert(authenticationRepository != null),
         super(AuthenticationInitial());
 
-
   @override
-  Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
+  Stream<AuthenticationState> mapEventToState(
+      AuthenticationEvent event) async* {
     print('getting hererererererererere');
     if (event is AppLoaded) {
       yield* _mapAppLoadedToState(event);
@@ -40,18 +41,21 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         yield AuthenticationNotAuthenticated();
       }
     } catch (e) {
-      yield AuthenticationFailure(message: e.message ?? 'An unknown error occurred');
+      print("Exception: $e");
+      yield AuthenticationFailure(
+          message: e.message ?? 'An unknown error occurred');
     }
   }
 
-  Stream<AuthenticationState> _mapUserLoggedInToState(UserLoggedIn event) async* {
+  Stream<AuthenticationState> _mapUserLoggedInToState(
+      UserLoggedIn event) async* {
     print("Authenticateddddddddddddddddddddddddddddddd");
     yield AuthenticationAuthenticated(user: event.user);
   }
 
-  Stream<AuthenticationState> _mapUserLoggedOutToState(UserLoggedOut event) async* {
+  Stream<AuthenticationState> _mapUserLoggedOutToState(
+      UserLoggedOut event) async* {
     await authenticationRepository.signOut();
     yield AuthenticationNotAuthenticated();
   }
 }
-

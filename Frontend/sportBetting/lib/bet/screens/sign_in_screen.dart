@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_network/bet/bloc/bloc.dart';
 import 'package:flutter_network/bet/bet.dart';
+import 'package:flutter_network/bet/screens/login_attempt.dart';
 import 'package:flutter_network/bet/screens/sign_up_screen.dart';
 
 class AuthForm extends StatelessWidget {
@@ -22,7 +23,7 @@ class AuthForm extends StatelessWidget {
 }
 
 class SignInScreen extends StatefulWidget {
-  static String routeName = '/signin';
+  static String routeName = '/';
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -30,12 +31,14 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final formkey = GlobalKey<FormState>();
 
-  var user = User(username: '', password: '', email: '');
+  var user = User(username: '', password: '');
 
   void onSave(BuildContext context) {
     formkey.currentState.save();
     BlocProvider.of<LoginBloc>(context)
         .add(LoginInWithEmailButtonPressed(user: user));
+    print("Herererere");
+    Navigator.of(context).pushNamed(LoginAttempt.routeName);
   }
 
   @override
@@ -47,12 +50,9 @@ class _SignInScreenState extends State<SignInScreen> {
         child: ListView(
           children: <Widget>[
             Container(
-              height: 300,
-              // decoration: BoxDecoration(
-              //     image: DecorationImage(
-              //         fit: BoxFit.cover,
-              //         image: AssetImage('assets/images/sign.jpg'))),
-            ),
+                margin: EdgeInsets.only(top: 60, right: 20, left: 10),
+                height: 300,
+                child: Image.asset('images/splash.png')),
             SizedBox(
               height: 20,
             ),
@@ -66,21 +66,17 @@ class _SignInScreenState extends State<SignInScreen> {
                           margin: EdgeInsets.only(right: 20, left: 10),
                           child: TextFormField(
                             onSaved: (value) {
-                              user.email = value;
+                              user.username = value;
                             },
                             decoration: InputDecoration(
-                              hintText: 'Email',
+                              hintText: 'Username',
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(247, 102, 94, 1)),
+                                borderSide: BorderSide(color: Colors.green),
                               ),
                             ),
                             validator: (String value) {
-                              var emailValid = RegExp(
-                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                  .hasMatch(value);
-                              if (!emailValid) {
-                                return 'Email is not valid';
+                              if (value.isEmpty) {
+                                return 'Username is not valid';
                               }
                               return null;
                             },
@@ -104,8 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             decoration: InputDecoration(
                               hintText: 'Password',
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(247, 102, 94, 1)),
+                                borderSide: BorderSide(color: Colors.green),
                               ),
                             ),
                             validator: (String value) {
@@ -132,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       bool valid = formkey.currentState.validate();
                       valid ? onSave(context) : () {};
                     },
-                    color: Color.fromRGBO(247, 102, 94, 1),
+                    color: Colors.green,
                     child: Text(
                       'SIGN IN',
                       style: TextStyle(
@@ -160,8 +155,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         TextSpan(
                           text: 'SIGN UP',
                           style: TextStyle(
-                              color: Color.fromRGBO(247, 102, 94, 1),
-                              fontWeight: FontWeight.bold),
+                              color: Colors.green, fontWeight: FontWeight.bold),
                         )
                       ]),
                 ),

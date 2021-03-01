@@ -1,23 +1,29 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class User {
-  int id;
+  String id;
   String password;
-  String email;
+  String username;
+  double balance;
 
-  User({this.id, @required this.password, @required email});
+  User(
+      {this.id,
+      @required this.password,
+      @required this.username,
+      this.balance});
+
+  List<Object> get props => [id, password, username, balance];
 
   @override
-  List<Object> get props => [id,password,email];
-
-  @override
-  String toString() => 'User {id: $id, password: $password,email: $email}';
+  String toString() =>
+      'User {id: $id, password: $password,email: $username, balance: $balance}';
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      email: json['email'],
-      password: json['password'],
-    );
+        id: json['public_id'],
+        username: json['username'],
+        password: json['password'],
+        balance: json['balance']);
   }
 }

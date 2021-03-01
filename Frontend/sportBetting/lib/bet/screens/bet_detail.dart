@@ -12,6 +12,7 @@ class BetDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green,
         title: Text('${this.bet.bookieID}'),
         actions: [
           IconButton(

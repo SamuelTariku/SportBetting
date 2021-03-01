@@ -5,11 +5,20 @@ abstract class BetEvent extends Equatable {
   const BetEvent();
 }
 
-class BetLoad extends BetEvent {
-  const BetLoad();
+class BetInitialize extends BetEvent {
+  const BetInitialize();
 
   @override
   List<Object> get props => [];
+}
+
+class BetLoad extends BetEvent {
+  final String userID;
+
+  const BetLoad(this.userID);
+
+  @override
+  List<Object> get props => [userID];
 }
 
 class BetCreate extends BetEvent {

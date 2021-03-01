@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_network/bet/bloc/bloc.dart';
 import 'package:flutter_network/bet/bet.dart';
 
 class SignUpScreen extends StatefulWidget {
-    static String routeName = '/signup';
+  static String routeName = '/signup';
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -15,17 +14,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
 
-  var user=User(username:'',password:'',email:'');
+  var user = User(username: '', password: '');
 
- void onSave(BuildContext context ){
+  void onSave(BuildContext context) {
     print("againnnnnnnnnnnnnnnnn");
-    print(user.email);
     print(user.password);
     print(user.username);
     formkey.currentState.save();
     BlocProvider.of<UserBloc>(context).add(UserCreate(user));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +32,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
         key: formkey,
         child: ListView(
           children: <Widget>[
+            Container(
+                child: BlocBuilder<UserBloc, UserState>(builder: (_, state) {
+              if (state is UserSuccessfull) {
+                Future.delayed(Duration(seconds: 1), () {
+                  Navigator.pop(context);
+                });
+              }
+
+              if (state is UserFailure) {
+                return Text("There is an error");
+              }
+
+              if (state is UserInitial || state is UserInProgress) {
+                return Text("");
+              }
+
+              return Center(child: CircularProgressIndicator());
+            })),
             // BackButtonWidget(),
             SizedBox(
               height: 20,
@@ -48,18 +63,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Container(
                           margin: EdgeInsets.only(right: 20, left: 10),
                           child: TextFormField(
-                            
                             decoration: InputDecoration(
                               hintText: 'Username',
-           
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(247, 102, 94, 1)),
+                                borderSide: BorderSide(color: Colors.green),
                               ),
                             ),
-                          onSaved: (value) {
-                    user.username = value;
-                  },
+                            onSaved: (value) {
+                              user.username = value;
+                            },
                             validator: (String value) {
                               if (value.length < 5) {
                                 return 'Username must be atleast 5 characters long';
@@ -70,33 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                children: <Widget>[
-                  IconButton(icon: Icon(Icons.mail), onPressed: null),
-                  Expanded(
-                      child: Container(
-                          margin: EdgeInsets.only(right: 20, left: 10),
-                          child: TextFormField(
-                             onSaved: (value) {
-                    user.email = value;
-                  },
-                            decoration: InputDecoration(
-                              hintText: 'Email',
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(247, 102, 94, 1)),
-                              ),
-                            ),
-                            validator: (String value) {
-                             
-                              return null;
-                            },
-                          )))
-                ],
-              ),
-            ),
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Row(
@@ -107,14 +93,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           margin: EdgeInsets.only(right: 20, left: 10),
                           child: TextFormField(
                             controller: _pass,
-                             onSaved: (value) {
-                    user.password = value;
-                  },
+                            onSaved: (value) {
+                              user.password = value;
+                            },
                             decoration: InputDecoration(
                               hintText: 'Password',
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(247, 102, 94, 1)),
+                                borderSide: BorderSide(color: Colors.green),
                               ),
                             ),
                             validator: (String value) {
@@ -140,8 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             decoration: InputDecoration(
                               hintText: 'Confirm Password',
                               focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color.fromRGBO(247, 102, 94, 1)),
+                                borderSide: BorderSide(color: Colors.green),
                               ),
                             ),
                             validator: (String value) {
@@ -167,9 +151,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: () {
                       bool valid = formkey.currentState.validate();
                       // ignore: unnecessary_statements
-                      valid?onSave(context):(){};
+                      valid ? onSave(context) : () {};
                     },
-                    color: Color.fromRGBO(247, 102, 94, 1),
+                    color: Colors.green,
                     child: Text(
                       'SIGN UP',
                       style: TextStyle(
@@ -182,8 +166,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             FlatButton(
-              child:Text('Log in'),
-              onPressed: (){
+              child: Text('Log in'),
+              onPressed: () {
                 Navigator.pop(context);
               },
             )
